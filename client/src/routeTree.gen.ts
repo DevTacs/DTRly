@@ -9,50 +9,68 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as DtrInternRouteImport } from './routes/dtr/intern'
+import { Route as DtrEmployeeRouteImport } from './routes/dtr/employee'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const DtrInternRoute = DtrInternRouteImport.update({
+  id: '/dtr/intern',
+  path: '/dtr/intern',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DtrEmployeeRoute = DtrEmployeeRouteImport.update({
+  id: '/dtr/employee',
+  path: '/dtr/employee',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/dtr/employee': typeof DtrEmployeeRoute
+  '/dtr/intern': typeof DtrInternRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/dtr/employee': typeof DtrEmployeeRoute
+  '/dtr/intern': typeof DtrInternRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/dtr/employee': typeof DtrEmployeeRoute
+  '/dtr/intern': typeof DtrInternRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/dtr/employee' | '/dtr/intern'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/dtr/employee' | '/dtr/intern'
+  id: '__root__' | '/dtr/employee' | '/dtr/intern'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  DtrEmployeeRoute: typeof DtrEmployeeRoute
+  DtrInternRoute: typeof DtrInternRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/dtr/intern': {
+      id: '/dtr/intern'
+      path: '/dtr/intern'
+      fullPath: '/dtr/intern'
+      preLoaderRoute: typeof DtrInternRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dtr/employee': {
+      id: '/dtr/employee'
+      path: '/dtr/employee'
+      fullPath: '/dtr/employee'
+      preLoaderRoute: typeof DtrEmployeeRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  DtrEmployeeRoute: DtrEmployeeRoute,
+  DtrInternRoute: DtrInternRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

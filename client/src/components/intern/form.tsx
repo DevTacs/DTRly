@@ -1,14 +1,16 @@
-import {useState} from "react"
+import type {InternRow} from "@/types/template-type"
 
-type DayRow = {
-    day: number
-    timeIn: string
-    timeOut: string
-    hoursRendered: string
-    supervisorInitial: string
+type InternFormProps = {
+    ranges: number[]
+    internInputs: InternRow[]
+    setInternInputs: React.Dispatch<React.SetStateAction<InternRow[]>>
 }
 
-export default function InternForm({ranges}: {ranges: number[]}) {
+export default function InternForm({
+    ranges,
+    internInputs,
+    setInternInputs,
+}: InternFormProps) {
     return (
         <div className="space-y-4">
             <h2 className="text-xl font-bold">Intern DTR</h2>
@@ -37,6 +39,15 @@ export default function InternForm({ranges}: {ranges: number[]}) {
                                 <td className="border p-2">
                                     <input
                                         type="time"
+                                        value={internInputs[index].timeIn}
+                                        onChange={(e) => {
+                                            const updated = [...internInputs]
+                                            updated[index] = {
+                                                ...updated[index],
+                                                timeIn: e.target.value,
+                                            }
+                                            setInternInputs(updated)
+                                        }}
                                         className="w-full border p-1 rounded"
                                     />
                                 </td>
@@ -45,6 +56,15 @@ export default function InternForm({ranges}: {ranges: number[]}) {
                                 <td className="border p-2">
                                     <input
                                         type="time"
+                                        value={internInputs[index].timeOut}
+                                        onChange={(e) => {
+                                            const updated = [...internInputs]
+                                            updated[index] = {
+                                                ...updated[index],
+                                                timeOut: e.target.value,
+                                            }
+                                            setInternInputs(updated)
+                                        }}
                                         className="w-full border p-1 rounded"
                                     />
                                 </td>
@@ -53,6 +73,17 @@ export default function InternForm({ranges}: {ranges: number[]}) {
                                 <td className="border p-2">
                                     <input
                                         type="text"
+                                        value={
+                                            internInputs[index].hoursRendered
+                                        }
+                                        onChange={(e) => {
+                                            const updated = [...internInputs]
+                                            updated[index] = {
+                                                ...updated[index],
+                                                hoursRendered: e.target.value,
+                                            }
+                                            setInternInputs(updated)
+                                        }}
                                         className="w-full border p-1 rounded"
                                     />
                                 </td>
@@ -61,6 +92,19 @@ export default function InternForm({ranges}: {ranges: number[]}) {
                                 <td className="border p-2">
                                     <input
                                         type="text"
+                                        value={
+                                            internInputs[index]
+                                                .supervisorInitial
+                                        }
+                                        onChange={(e) => {
+                                            const updated = [...internInputs]
+                                            updated[index] = {
+                                                ...updated[index],
+                                                supervisorInitial:
+                                                    e.target.value,
+                                            }
+                                            setInternInputs(updated)
+                                        }}
                                         className="w-full border p-1 rounded"
                                     />
                                 </td>

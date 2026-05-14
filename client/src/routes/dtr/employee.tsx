@@ -1,52 +1,35 @@
-import PreviewRender from "@/templates/preview-render"
-import TemplateRender from "@/templates/template-render"
+import EmployeeForm from "@/components/employee/form"
+import PreviewEmployeeDtr from "@/components/employee/preview"
 import type {TemplateType} from "@/types/template-type"
-import {createFileRoute} from "@tanstack/react-router"
+import {createFileRoute, useNavigate} from "@tanstack/react-router"
 import {useState} from "react"
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/dtr/employee")({
     component: RouteComponent,
 })
 
 function RouteComponent() {
+    const navigate = useNavigate()
     const [templates] = useState<TemplateType[]>([
         {
             id: "intern",
             name: "Intern DTR",
-            image: "./intern-dtr.png",
+            image: "../intern-dtr.png",
         },
         {
             id: "employee",
             name: "Employee DTR",
-            image: "./employee-dtr.png",
+            image: "../employee-dtr.png",
         },
     ])
     const [ranges] = useState<number[]>(Array.from({length: 31}))
-    const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>(
-        templates[0],
-    )
+    const [selectedTemplate] = useState<TemplateType>(templates[1])
 
     const firstHalf = ranges.slice(0, 15)
     const secondHalf = ranges.slice(15)
 
     return (
         <div className="min-h-screen bg-muted/40">
-            {/* HEADER */}
-            {/* <header className="sticky top-0 z-50 h-16 border-b bg-background/90 backdrop-blur">
-                <div className="flex h-full items-center justify-between px-6">
-                    <h1 className="text-2xl font-bold tracking-tight">
-                        DTR
-                        <span className="text-primary">ly</span>
-                    </h1>
-
-                    <button
-                        onClick={() => window.print()}
-                        className="rounded-lg bg-primary px-4 py-2 text-primary-foreground shadow hover:opacity-90 transition">
-                        Print / Save as PDF
-                    </button>
-                </div>
-            </header> */}
-
             {/* MAIN */}
             <main className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
                 {/* LEFT PANEL */}
@@ -60,7 +43,9 @@ function RouteComponent() {
                         {templates.map((template) => (
                             <div
                                 key={template.id}
-                                onClick={() => setSelectedTemplate(template)}
+                                onClick={() =>
+                                    navigate({to: `/dtr/${template.id}`})
+                                }
                                 className={`
                                 relative overflow-hidden rounded-xl cursor-pointer
                                 border transition-all duration-300 group
@@ -106,10 +91,7 @@ function RouteComponent() {
 
                     {/* INPUT FORM */}
                     <div className="mt-8">
-                        <TemplateRender
-                            selectedTemplate={selectedTemplate}
-                            ranges={ranges}
-                        />
+                        <EmployeeForm ranges={ranges} />
                     </div>
                 </aside>
 
@@ -130,26 +112,15 @@ function RouteComponent() {
                         </div>
 
                         <div className="overflow-auto max-h-[85vh] p-6">
-                            <PreviewRender
-                                selectedTemplate={selectedTemplate}
-                                ranges={ranges}
-                            />
+                            <PreviewEmployeeDtr ranges={ranges} />
                         </div>
                     </div>
                 </section>
                 {/* PRINT AREA */}
                 <div className="hidden print:block print-area">
-                    <PreviewRender
-                        selectedTemplate={selectedTemplate}
-                        ranges={firstHalf}
-                    />
-
+                    <PreviewEmployeeDtr ranges={firstHalf} />
                     <div className="page-break"></div>
-
-                    <PreviewRender
-                        selectedTemplate={selectedTemplate}
-                        ranges={secondHalf}
-                    />
+                    <PreviewEmployeeDtr ranges={secondHalf} />
                 </div>
             </main>
         </div>
