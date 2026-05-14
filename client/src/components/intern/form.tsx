@@ -9,92 +9,65 @@ type DayRow = {
 }
 
 export default function InternForm({ranges}: {ranges: number[]}) {
-    const [rows, setRows] = useState<DayRow[]>(
-        ranges.map((day) => ({
-            day,
-            timeIn: "",
-            timeOut: "",
-            hoursRendered: "",
-            supervisorInitial: "",
-        })),
-    )
-
-    const handleChange = (
-        index: number,
-        field: keyof DayRow,
-        value: string,
-    ) => {
-        const updated = [...rows]
-        updated[index] = {
-            ...updated[index],
-            [field]: value,
-        }
-        setRows(updated)
-    }
-
     return (
-        <div className="space-y-6">
-            {/* Title */}
+        <div className="space-y-4">
             <h2 className="text-xl font-bold">Intern DTR</h2>
 
-            {/* Rows */}
-            <div className="space-y-3">
-                {rows.map((_, index) => (
-                    <div
-                        key={index}
-                        className="grid grid-cols-5 gap-3 items-center border p-3 rounded-md bg-white shadow-sm">
-                        {/* Day */}
-                        <div className="font-semibold">Day {index + 1}</div>
+            <div className="overflow-x-auto">
+                <table className="w-full border border-gray-300 text-sm">
+                    <thead className="bg-gray-100">
+                        <tr>
+                            <th className="border p-2">Date</th>
+                            <th className="border p-2">Time In</th>
+                            <th className="border p-2">Time Out</th>
+                            <th className="border p-2">Hours Rendered</th>
+                            <th className="border p-2">Supervisor Initial</th>
+                        </tr>
+                    </thead>
 
-                        {/* Time In */}
-                        <input
-                            type="time"
-                            onChange={(e) =>
-                                handleChange(index, "timeIn", e.target.value)
-                            }
-                            placeholder="Time In"
-                            className="border p-1 rounded w-full"
-                        />
+                    <tbody>
+                        {ranges.map((_, index) => (
+                            <tr key={index} className="text-center">
+                                {/* Day */}
+                                <td className="border p-2 font-semibold">
+                                    {index + 1}
+                                </td>
 
-                        {/* Time Out */}
-                        <input
-                            type="time"
-                            onChange={(e) =>
-                                handleChange(index, "timeOut", e.target.value)
-                            }
-                            placeholder="Time Out"
-                            className="border p-1 rounded w-full"
-                        />
+                                {/* Time In */}
+                                <td className="border p-2">
+                                    <input
+                                        type="time"
+                                        className="w-full border p-1 rounded"
+                                    />
+                                </td>
 
-                        {/* Hours Rendered */}
-                        <input
-                            type="text"
-                            onChange={(e) =>
-                                handleChange(
-                                    index,
-                                    "hoursRendered",
-                                    e.target.value,
-                                )
-                            }
-                            placeholder="Hours"
-                            className="border p-1 rounded w-full"
-                        />
+                                {/* Time Out */}
+                                <td className="border p-2">
+                                    <input
+                                        type="time"
+                                        className="w-full border p-1 rounded"
+                                    />
+                                </td>
 
-                        {/* Supervisor */}
-                        <input
-                            type="text"
-                            onChange={(e) =>
-                                handleChange(
-                                    index,
-                                    "supervisorInitial",
-                                    e.target.value,
-                                )
-                            }
-                            placeholder="Supervisor"
-                            className="border p-1 rounded w-full"
-                        />
-                    </div>
-                ))}
+                                {/* Hours Rendered */}
+                                <td className="border p-2">
+                                    <input
+                                        type="text"
+                                        className="w-full border p-1 rounded"
+                                    />
+                                </td>
+
+                                {/* Supervisor Initial */}
+                                <td className="border p-2">
+                                    <input
+                                        type="text"
+                                        className="w-full border p-1 rounded"
+                                    />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     )
