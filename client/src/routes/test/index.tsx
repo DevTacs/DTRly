@@ -1,49 +1,67 @@
+import TemplateRender from "@/templates/template-render"
+import type {TemplateType} from "@/types/template-type"
 import {createFileRoute} from "@tanstack/react-router"
+import {useState} from "react"
 
 export const Route = createFileRoute("/test/")({
     component: RouteComponent,
 })
 
 function RouteComponent() {
+    const [templates] = useState<TemplateType[]>([
+        {
+            id: "intern",
+            name: "Intern DTR",
+            image: "./intern-dtr.png",
+        },
+        {
+            id: "employee",
+            name: "Employee DTR",
+            image: "./employee-dtr.png",
+        },
+    ])
+    const [ranges] = useState<number[]>(Array.from({length: 31}))
+    const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>(
+        templates[0],
+    )
+
     return (
-        <div>
-            <h2 className="text-xl font-semibold">Select Template</h2>
+        <div className="grid grid-cols-2">
+            <div className="h-screen overflow-y-auto bg-accent">
+                <h2 className="text-xl font-semibold">Select Template</h2>
+                <div className="flex flex-row py-5 px-10 gap-6">
+                    {templates.map((template) => (
+                        <div
+                            onClick={() => setSelectedTemplate(template)}
+                            className="relative w-56 group cursor-pointer rounded-lg overflow-hidden shadow-md hover:shadow-xl transition transform hover:scale-105">
+                            <img
+                                src={template.image}
+                                alt={template.name}
+                                className="w-full h-full object-cover"
+                            />
 
-            <div className="flex flex-row py-5 px-10 gap-6">
-                {/* INTERN DTR */}
-                <div
-                    onClick={() => console.log("Intern DTR selected")}
-                    className="relative w-56 group cursor-pointer rounded-lg overflow-hidden shadow-md hover:shadow-xl transition transform hover:scale-105">
-                    <img
-                        src="./intern-dtr.png"
-                        alt="Intern DTR"
-                        className="w-full h-full object-cover"
-                    />
-
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
-                        <span className="text-white font-bold text-lg">
-                            INTERN DTR
-                        </span>
-                    </div>
+                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+                                <span className="text-white font-bold text-lg">
+                                    {template.name}
+                                </span>
+                            </div>
+                        </div>
+                    ))}
                 </div>
+                <div className="flex gap-3">
+                    <label htmlFor="dateRange">Date: </label>
+                    <input type="date" className="border rounded-lg p-2" />
 
-                {/* EMPLOYEE DTR */}
-                <div
-                    onClick={() => console.log("Employee DTR selected")}
-                    className="relative w-56 group cursor-pointer rounded-lg overflow-hidden shadow-md hover:shadow-xl transition transform hover:scale-105">
-                    <img
-                        src="./employee-dtr.png"
-                        alt="Employee DTR"
-                        className="w-full h-full object-cover"
-                    />
+                    <span className="flex items-center text-gray-500">to</span>
 
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
-                        <span className="text-white font-bold text-lg">
-                            EMPLOYEE DTR
-                        </span>
-                    </div>
+                    <input type="date" className="border rounded-lg p-2" />
                 </div>
+                <TemplateRender
+                    selectedTemplate={selectedTemplate}
+                    ranges={ranges}
+                />
             </div>
+            <div></div>
         </div>
     )
 }
