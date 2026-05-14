@@ -171,6 +171,10 @@
         width: 100%;
     }
 
+    .page-break {
+        page-break-after: always;
+    }
+
     /* Optional: remove UI noise */
     button {
         display: none !important;
