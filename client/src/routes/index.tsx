@@ -1,9 +1,10 @@
+import PreviewRender from "@/templates/preview-render"
 import TemplateRender from "@/templates/template-render"
 import type {TemplateType} from "@/types/template-type"
 import {createFileRoute} from "@tanstack/react-router"
 import {useState} from "react"
 
-export const Route = createFileRoute("/test/")({
+export const Route = createFileRoute("/")({
     component: RouteComponent,
 })
 
@@ -61,7 +62,20 @@ function RouteComponent() {
                     ranges={ranges}
                 />
             </div>
-            <div></div>
+            <div className="print-area">
+                <div className="px-20">
+                    <PreviewRender
+                        selectedTemplate={selectedTemplate}
+                        ranges={ranges}
+                    />
+                </div>
+
+                <button
+                    onClick={() => window.print()}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                    Print / Save as PDF
+                </button>
+            </div>
         </div>
     )
 }
