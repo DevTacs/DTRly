@@ -1,17 +1,17 @@
 import path from "path"
 import tailwindcss from "@tailwindcss/vite"
 import {defineConfig} from "vite"
-import {tanstackRouter} from "@tanstack/router-plugin/vite"
 import react from "@vitejs/plugin-react"
+import {tanstackRouter} from "@tanstack/router-plugin/vite"
 
 export default defineConfig({
     plugins: [
-        react(),
-        tailwindcss(),
         tanstackRouter({
             target: "react",
             autoCodeSplitting: true,
         }),
+        tailwindcss(),
+        react(),
     ],
     resolve: {
         alias: {
