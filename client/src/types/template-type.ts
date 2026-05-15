@@ -7,7 +7,7 @@ export type TemplateType = {
 }
 
 export type EmployeeRow = {
-    date: number
+    date: string
     regularTimeIn: string
     regularTimeOut: string
     overtimeIn: string
@@ -16,7 +16,7 @@ export type EmployeeRow = {
 }
 
 export type InternRow = {
-    index: number
+    date: string
     timeIn: string
     timeOut: string
     hoursRendered: string
