@@ -1,7 +1,6 @@
 import type {InternRow} from "@/types/template-type"
 
 type InternFormProps = {
-    ranges: number[]
     internInputs: InternRow[]
     setInternInputs: React.Dispatch<React.SetStateAction<InternRow[]>>
 }

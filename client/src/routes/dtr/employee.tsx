@@ -1,8 +1,10 @@
 import EmployeeForm from "@/components/employee/form"
 import PreviewEmployeeDtr from "@/components/employee/preview"
-import type {TemplateType} from "@/types/template-type"
+import InternForm from "@/components/intern/form"
+import PreviewInternDtr from "@/components/intern/preview"
+import type {EmployeeRow, TemplateType} from "@/types/template-type"
 import {createFileRoute, useNavigate} from "@tanstack/react-router"
-import {useState} from "react"
+import {useEffect, useMemo, useState} from "react"
 
 export const Route = createFileRoute("/dtr/employee")({
     component: RouteComponent,
@@ -10,6 +12,7 @@ export const Route = createFileRoute("/dtr/employee")({
 
 function RouteComponent() {
     const navigate = useNavigate()
+
     const [templates] = useState<TemplateType[]>([
         {
             id: "intern",
@@ -22,47 +25,100 @@ function RouteComponent() {
             image: "../employee-dtr.png",
         },
     ])
-    const [ranges] = useState<number[]>(Array.from({length: 31}))
+
     const [selectedTemplate] = useState<TemplateType>(templates[1])
 
-    const firstHalf = ranges.slice(0, 15)
-    const secondHalf = ranges.slice(15)
+    // 👉 SOURCE OF TRUTH
+    const [startingMonth, setStartingMonth] = useState<string>(
+        new Date().toISOString().slice(0, 7),
+    )
+
+    const [employeeInputs, setEmployeeInputs] = useState<EmployeeRow[]>([])
+
+    // -----------------------------
+    // DERIVED: total days in month
+    // -----------------------------
+    const totalDays = useMemo(() => {
+        const date = new Date(startingMonth + "-01")
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
+    }, [startingMonth])
+
+    // -----------------------------
+    // DERIVED: day numbers (1–31)
+    // -----------------------------
+
+    // -----------------------------
+    // INIT / RESET INPUTS PER MONTH
+    // -----------------------------
+    useEffect(() => {
+        const baseDate = new Date(startingMonth + "-01")
+
+        const newInputs: EmployeeRow[] = Array.from(
+            {length: totalDays},
+            (_, index) => {
+                const currentDate = new Date(baseDate)
+                currentDate.setDate(baseDate.getDate() + index)
+
+                return {
+                    date: currentDate.toISOString().split("T")[0],
+                    regularTimeIn: "",
+                    regularTimeOut: "",
+                    overtimeIn: "",
+                    overtimeOut: "",
+                    signature: "",
+                }
+            },
+        )
+
+        setEmployeeInputs(newInputs)
+    }, [startingMonth, totalDays])
+
+    // -----------------------------
+    // SPLIT FOR PRINTING
+    // -----------------------------
+    const mid = Math.ceil(employeeInputs.length / 2)
+    const firstHalf = employeeInputs.slice(0, mid)
+    const secondHalf = employeeInputs.slice(mid)
 
     return (
         <div className="min-h-screen bg-muted/40">
-            {/* MAIN */}
             <main className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
                 {/* LEFT PANEL */}
                 <aside className="rounded-2xl border bg-card p-6 shadow-sm h-fit">
-                    <h2 className="text-lg font-semibold mb-5">
-                        Select Template
-                    </h2>
+                    {/* HEADER */}
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-lg font-semibold">
+                            Select Template
+                        </h2>
+
+                        <input
+                            type="month"
+                            value={startingMonth}
+                            onChange={(e) => setStartingMonth(e.target.value)}
+                            className="rounded-lg border px-3 py-2 text-sm"
+                        />
+                    </div>
 
                     {/* TEMPLATE CARDS */}
-                    <div className=" flex flex-row items-center gap-4">
+                    <div className="flex gap-4">
                         {templates.map((template) => (
                             <div
                                 key={template.id}
                                 onClick={() =>
                                     navigate({to: `/dtr/${template.id}`})
                                 }
-                                className={`
-                                relative overflow-hidden rounded-xl cursor-pointer
-                                border transition-all duration-300 group
-                                ${
+                                className={`relative overflow-hidden rounded-xl cursor-pointer border transition-all group ${
                                     selectedTemplate.id === template.id
                                         ? "border-primary ring-2 ring-primary/20"
                                         : "border-border hover:border-primary/50"
-                                }
-                            `}>
+                                }`}>
                                 <img
                                     src={template.image}
-                                    alt={template.name}
-                                    className="h-40 w-full object-cover group-hover:scale-105 transition duration-300"
+                                    className="h-40 w-full object-cover group-hover:scale-105 transition"
                                 />
 
-                                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                                    <span className="text-white text-center text-lg font-semibold">
+                                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center">
+                                    <span className="text-white font-semibold">
                                         {template.name}
                                     </span>
                                 </div>
@@ -70,58 +126,50 @@ function RouteComponent() {
                         ))}
                     </div>
 
-                    {/* DATE RANGE */}
-                    <div className="mt-8">
-                        <h3 className="font-medium mb-3">Date Range</h3>
-
-                        <div className="flex items-center gap-3">
-                            <input
-                                type="date"
-                                className="w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
-                            />
-
-                            <span className="text-muted-foreground">to</span>
-
-                            <input
-                                type="date"
-                                className="w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
+                    {/* FORM */}
+                    {employeeInputs.length > 0 && (
+                        <div className="mt-8">
+                            <EmployeeForm
+                                employeeInputs={employeeInputs}
+                                setEmployeeInputs={setEmployeeInputs}
                             />
                         </div>
-                    </div>
-
-                    {/* INPUT FORM */}
-                    <div className="mt-8">
-                        <EmployeeForm ranges={ranges} />
-                    </div>
+                    )}
                 </aside>
 
                 {/* RIGHT PREVIEW */}
-                <section className="space-y-6 sticky top-6 self-start h-fit">
-                    {/* SCREEN PREVIEW */}
-                    <div className="print:hidden rounded-2xl border bg-white shadow-sm overflow-hidden">
-                        <div className="border-b px-6 py-4 flex items-center justify-between">
+                <section className="sticky top-6 h-fit space-y-6">
+                    <div className="border bg-white rounded-2xl shadow-sm overflow-hidden print:hidden">
+                        <div className="flex justify-between items-center border-b px-6 py-4">
                             <h2 className="text-lg font-semibold">
                                 Live Preview
                             </h2>
 
                             <button
                                 onClick={() => window.print()}
-                                className="rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground shadow hover:opacity-90 transition">
+                                className="bg-primary text-white px-4 py-2 rounded-lg text-sm">
                                 Print / Save PDF
                             </button>
                         </div>
 
-                        <div className="overflow-auto max-h-[85vh] p-6">
-                            <PreviewEmployeeDtr ranges={ranges} />
+                        <div className="p-6 max-h-[85vh] overflow-auto">
+                            {employeeInputs.length > 0 && (
+                                <PreviewEmployeeDtr
+                                    employeeInputs={employeeInputs}
+                                />
+                            )}
                         </div>
                     </div>
                 </section>
+
                 {/* PRINT AREA */}
-                <div className="hidden print:block print-area">
-                    <PreviewEmployeeDtr ranges={firstHalf} />
-                    <div className="page-break"></div>
-                    <PreviewEmployeeDtr ranges={secondHalf} />
-                </div>
+                {employeeInputs.length > 0 && (
+                    <div className="hidden print:block px-10">
+                        <PreviewEmployeeDtr employeeInputs={firstHalf} />
+                        <div className="page-break" />
+                        <PreviewEmployeeDtr employeeInputs={secondHalf} />
+                    </div>
+                )}
             </main>
         </div>
     )

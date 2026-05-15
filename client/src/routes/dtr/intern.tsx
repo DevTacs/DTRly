@@ -131,7 +131,6 @@ function RouteComponent() {
                     {internInputs.length > 0 && (
                         <div className="mt-8">
                             <InternForm
-                                ranges={ranges}
                                 internInputs={internInputs}
                                 setInternInputs={setInternInputs}
                             />

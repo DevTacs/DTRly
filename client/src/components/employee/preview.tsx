@@ -1,4 +1,11 @@
-export default function PreviewEmployeeDtr({ranges}: {ranges: number[]}) {
+import type {EmployeeRow} from "@/types/template-type"
+
+type PreviewEmployeeDtrProps = {
+    employeeInputs: EmployeeRow[]
+}
+export default function PreviewEmployeeDtr({
+    employeeInputs,
+}: PreviewEmployeeDtrProps) {
     return (
         <div className="bg-white shadow p-6 overflow-auto">
             <h1 className="text-3xl font-bold text-center mb-8">
@@ -60,26 +67,25 @@ export default function PreviewEmployeeDtr({ranges}: {ranges: number[]}) {
                 </thead>
 
                 <tbody>
-                    {ranges &&
-                        ranges.map((_, i) => (
-                            <tr key={i}>
-                                {/* DATE */}
-                                <td className="border border-black p-2 text-center text-sm">
-                                    {i + 1}
-                                </td>
+                    {employeeInputs.map((input) => (
+                        <tr key={input.date}>
+                            {/* DATE */}
+                            <td className="border border-black p-2 text-center text-sm">
+                                {input.date}
+                            </td>
 
-                                {/* REGULAR TIME (AM IN/OUT, PM IN/OUT) */}
-                                <td className="border border-black p-2 text-sm"></td>
-                                <td className="border border-black p-2 text-sm"></td>
+                            {/* REGULAR TIME (AM IN/OUT, PM IN/OUT) */}
+                            <td className="border border-black p-2 text-sm"></td>
+                            <td className="border border-black p-2 text-sm"></td>
 
-                                {/* OVERTIME (AM IN/OUT, PM IN/OUT) */}
-                                <td className="border border-black p-2 text-sm"></td>
-                                <td className="border border-black p-2 text-sm"></td>
+                            {/* OVERTIME (AM IN/OUT, PM IN/OUT) */}
+                            <td className="border border-black p-2 text-sm"></td>
+                            <td className="border border-black p-2 text-sm"></td>
 
-                                {/* SIGNATURE */}
-                                <td className="border border-black p-2 text-sm"></td>
-                            </tr>
-                        ))}
+                            {/* SIGNATURE */}
+                            <td className="border border-black p-2 text-sm"></td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
 
