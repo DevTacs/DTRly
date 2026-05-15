@@ -65,7 +65,7 @@ export default function EmployeeForm({
                         {employeeInputs.map((input, index) => (
                             <tr key={input.date}>
                                 {/* DATE */}
-                                <td className="w-[110px] border border-black p-2 text-center text-sm">
+                                <td className="w-27.5 border border-black p-2 text-center text-sm">
                                     {input.date}
                                 </td>
 
