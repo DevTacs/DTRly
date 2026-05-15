@@ -53,7 +53,7 @@ export default function PreviewInternDtr({
                             <tr key={i}>
                                 {/* DATE */}
                                 <td className="border border-black p-2 text-center text-sm">
-                                    {input.index + 1}
+                                    {input.date}
                                 </td>
                                 <td className="border border-black p-2 text-sm">
                                     {input.timeIn}

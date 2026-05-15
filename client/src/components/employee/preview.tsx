@@ -75,15 +75,25 @@ export default function PreviewEmployeeDtr({
                             </td>
 
                             {/* REGULAR TIME (AM IN/OUT, PM IN/OUT) */}
-                            <td className="border border-black p-2 text-sm"></td>
-                            <td className="border border-black p-2 text-sm"></td>
+                            <td className="border border-black p-2 text-sm">
+                                {input.regularTimeIn}
+                            </td>
+                            <td className="border border-black p-2 text-sm">
+                                {input.regularTimeOut}
+                            </td>
 
                             {/* OVERTIME (AM IN/OUT, PM IN/OUT) */}
-                            <td className="border border-black p-2 text-sm"></td>
-                            <td className="border border-black p-2 text-sm"></td>
+                            <td className="border border-black p-2 text-sm">
+                                {input.overtimeIn}
+                            </td>
+                            <td className="border border-black p-2 text-sm">
+                                {input.overtimeOut}
+                            </td>
 
                             {/* SIGNATURE */}
-                            <td className="border border-black p-2 text-sm"></td>
+                            <td className="border border-black p-2 text-sm">
+                                {input.signature}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
