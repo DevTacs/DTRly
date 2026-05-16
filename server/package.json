@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "tsx watch src/index.ts",
+        "dev": "node --env-file=.env --import tsx --watch src/server.ts",
         "start": "node dist/index.js",
         "build": "tsc"
     },
@@ -13,18 +13,33 @@
     "license": "ISC",
     "type": "module",
     "dependencies": {
+        "bcrypt": "^6.0.0",
+        "cookie-parser": "^1.4.7",
         "cors": "^2.8.6",
         "express": "^5.2.1",
+        "express-async-handler": "^1.2.0",
+        "http-errors": "^2.0.1",
+        "jsonwebtoken": "^9.0.3",
+        "mongoose": "^9.6.2",
         "multer": "^2.1.1",
+        "passport": "^0.7.0",
+        "passport-google-oauth20": "^2.0.0",
+        "passport-local": "^1.0.0",
         "pdf2pic": "^3.2.0",
         "tesseract.js": "^7.0.0"
     },
     "devDependencies": {
         "@tsconfig/node22": "^22.0.5",
+        "@types/bcrypt": "^6.0.0",
+        "@types/cookie-parser": "^1.4.10",
         "@types/cors": "^2.8.19",
         "@types/express": "^5.0.6",
+        "@types/jsonwebtoken": "^9.0.10",
         "@types/multer": "^2.1.0",
         "@types/node": "^25.7.0",
+        "@types/passport": "^1.0.17",
+        "@types/passport-google-oauth20": "^2.0.17",
+        "@types/passport-local": "^1.0.38",
         "tsx": "^4.21.0",
         "typescript": "^6.0.3"
     }

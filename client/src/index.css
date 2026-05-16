@@ -150,3 +150,38 @@
         @apply font-sans;
     }
 }
+
+@media print {
+    /* Hide everything */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Show only print area */
+    .print-area,
+    .print-area * {
+        visibility: visible;
+    }
+
+    /* Position print area at top-left */
+    .print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    .page-break {
+        page-break-after: always;
+    }
+
+    /* Optional: remove UI noise */
+    button {
+        display: none !important;
+    }
+
+    input {
+        border: none !important;
+        outline: none !important;
+    }
+}
