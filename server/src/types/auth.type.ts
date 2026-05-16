@@ -11,10 +11,12 @@ export type GoogleUser = {
 
 export type LocalUser = {
     firstName: string
-    middleName?: string
+    middleName?: string | null
     lastName: string
+    name: string
     email: string
     password: string
+    avatar: string
     provider: Provider
 }
 

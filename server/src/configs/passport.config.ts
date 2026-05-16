@@ -2,12 +2,11 @@ import passport from "passport"
 import {Strategy as GoogleStrategy} from "passport-google-oauth20"
 import {Strategy as LocalStrategy} from "passport-local"
 import {
-    createUserAsync,
+    createGoogleUserAsync,
     findUserByEmailAsync,
     findUserByGoogleIdAsync,
 } from "../services/user.service.js"
 import type {GoogleUser, User} from "../types/auth.type.js"
-import {compare} from "bcrypt"
 import {comparePassword} from "../utils/bcrypt-util.js"
 
 passport.use(
@@ -32,7 +31,7 @@ passport.use(
                         avatar: profile.photos?.[0]?.value!,
                         provider: "google",
                     }
-                    user = await createUserAsync(payload)
+                    user = await createGoogleUserAsync(payload)
                 }
                 const userPayload: User = {
                     _id: user._id,

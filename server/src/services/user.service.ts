@@ -6,5 +6,6 @@ export const findUserByGoogleIdAsync = (googleId: string) =>
 
 export const findUserByEmailAsync = (email: string) => User.findOne({email})
 
-export const createUserAsync = (user: GoogleUser | LocalUser) =>
-    User.create(user)
+export const createGoogleUserAsync = (user: GoogleUser) => User.create(user)
+
+export const createLocalUserAsync = (user: LocalUser) => User.create(user)
