@@ -20,6 +20,11 @@ export type LocalUser = {
     provider: Provider
 }
 
+export type LoggedUser = {
+    email: string
+    password: string
+}
+
 export type User = {
     _id: Types.ObjectId
     name: string

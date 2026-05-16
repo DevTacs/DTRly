@@ -1,18 +1,39 @@
 import type {NextFunction, Request, Response} from "express"
 import {generateToken, verifyToken} from "../utils/jwt.util.js"
-import type {LocalUser, User} from "../types/auth.type.js"
+import type {LocalUser, LoggedUser, User} from "../types/auth.type.js"
 import {setAuthCookie} from "../utils/cookie.util.js"
 import {
     createLocalUserAsync,
     findUserByEmailAsync,
 } from "../services/user.service.js"
-import {hashPassword} from "../utils/bcrypt-util.js"
+import {comparePassword, hashPassword} from "../utils/bcrypt-util.js"
 import createHttpError from "http-errors"
 
-export const loginAsync = async (req: Request, res: Response) => {
-    const user = verifyToken(req.cookies.authToken)
+export const loginAsync = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    const payload = req.body as LoggedUser
+    if (!payload) {
+        next(createHttpError(400, "Invalid credentials"))
+    }
+
+    const user = await findUserByEmailAsync(payload.email)
+    if (!user) return next(createHttpError(400, "User not found"))
+
+    const isMatch = await comparePassword(payload.password, user?.password!)
+    if (!isMatch) return next(createHttpError(400, "Invalid credentials"))
+
+    const userPayload: User = {
+        _id: user._id,
+        name: user.name!,
+        email: user.email,
+        avatar: user.avatar,
+    }
+    const token = generateToken(userPayload)
+    setAuthCookie(res, token)
     res.status(200).json({
-        user,
         success: true,
         message: "User logged in successfully",
     })
@@ -26,11 +47,11 @@ export const registerAsync = async (
     const payload = req.body as LocalUser
 
     if (!payload) {
-        next(createHttpError(400, "Invalid credentials"))
+        return next(createHttpError(400, "Invalid credentials"))
     }
 
     let user = await findUserByEmailAsync(payload.email)
-    if (user) next(createHttpError(400, "User already exists"))
+    if (user) return next(createHttpError(400, "User already exists"))
 
     const hashedPassword = await hashPassword(payload.password)
     payload.password = hashedPassword
