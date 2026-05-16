@@ -10,7 +10,6 @@ import {hashPassword} from "../utils/bcrypt-util.js"
 import createHttpError from "http-errors"
 
 export const loginAsync = async (req: Request, res: Response) => {
-    console.log(req.user)
     res.status(200).json({
         success: true,
         message: "User logged in successfully",
@@ -33,6 +32,7 @@ export const registerAsync = async (
 
     const hashedPassword = await hashPassword(payload.password)
     payload.password = hashedPassword
+    payload.provider = "local"
 
     await createUserAsync(payload)
     res.status(201).json({success: true, message: "User created successfully"})

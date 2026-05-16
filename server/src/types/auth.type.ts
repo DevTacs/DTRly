@@ -15,6 +15,7 @@ export type LocalUser = {
     lastName: string
     email: string
     password: string
+    provider: Provider
 }
 
 export type User = {
