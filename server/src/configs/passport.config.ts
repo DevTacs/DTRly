@@ -1,17 +1,21 @@
 import passport from "passport"
 import {Strategy as GoogleStrategy} from "passport-google-oauth20"
+import {Strategy as LocalStrategy} from "passport-local"
 import {
     createUserAsync,
+    findUserByEmailAsync,
     findUserByGoogleIdAsync,
 } from "../services/user.service.js"
-import type {GoogleUser} from "../types/auth.type.js"
+import type {GoogleUser, User} from "../types/auth.type.js"
+import {compare} from "bcrypt"
+import {comparePassword} from "../utils/bcrypt-util.js"
 
 passport.use(
     new GoogleStrategy(
         {
             clientID: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-            callbackURL: "/auth/google/callback",
+            callbackURL: process.env.GOOGLE_CALLBACK_URL,
         },
 
         async (accessToken, refreshToken, profile, done) => {
@@ -30,10 +34,46 @@ passport.use(
                     }
                     user = await createUserAsync(payload)
                 }
+                const userPayload: User = {
+                    _id: user._id,
+                    name: user.name!,
+                    email: user.email,
+                    avatar: user.avatar,
+                }
 
-                return done(null, user)
+                return done(null, userPayload)
             } catch (err) {
                 return done(err, false)
+            }
+        },
+    ),
+)
+
+passport.use(
+    new LocalStrategy(
+        {
+            usernameField: "email", // 👈 use email instead of username
+            passwordField: "password",
+        },
+        async (email, password, done) => {
+            try {
+                const user = await findUserByEmailAsync(email)
+
+                if (!user) return done(null, false, {message: "User not found"})
+
+                const isMatch = await comparePassword(password, user.password!)
+
+                if (!isMatch)
+                    return done(null, false, {message: "Wrong password"})
+                const userPayload: User = {
+                    _id: user._id,
+                    name: `${user.firstName} ${user.middleName ?? ""} ${user.lastName}`,
+                    email: user.email,
+                    avatar: user.avatar,
+                }
+                return done(null, userPayload)
+            } catch (err) {
+                return done(err)
             }
         },
     ),

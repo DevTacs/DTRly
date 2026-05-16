@@ -24,7 +24,7 @@ const errorMiddleware: ErrorRequestHandler = (err, req, res, next) => {
             .join(", ")
     }
 
-    res.status(statusCode).json({
+    return res.status(statusCode).json({
         success: false,
         message,
     })
