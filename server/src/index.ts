@@ -1,6 +1,6 @@
 import express from "express"
 import cors from "cors"
-import connectDB from "./configs/db.js"
+import connectDB from "./configs/db.config.js"
 import AuthRouter from "./routes/auth.route.js"
 import errorMiddleware from "./middlewares/error.middleware.js"
 
