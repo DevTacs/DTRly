@@ -1,4 +1,5 @@
 import express from "express"
+import asyncHandler from "express-async-handler"
 import {
     loginAsync,
     logoutAsync,
@@ -6,8 +7,8 @@ import {
 } from "../controllers/auth.controller.js"
 const router = express.Router()
 
-router.post("/login", loginAsync)
-router.post("/register", registerAsync)
-router.delete("/logout", logoutAsync)
+router.post("/login", asyncHandler(loginAsync))
+router.post("/register", asyncHandler(registerAsync))
+router.delete("/logout", asyncHandler)
 
 export default router
