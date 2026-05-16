@@ -164,7 +164,7 @@ function RouteComponent() {
 
                 {/* PRINT AREA */}
                 {employeeInputs.length > 0 && (
-                    <div className="hidden print:block px-10">
+                    <div className="print-area hidden print:block px-10">
                         <PreviewEmployeeDtr employeeInputs={firstHalf} />
                         <div className="page-break" />
                         <PreviewEmployeeDtr employeeInputs={secondHalf} />

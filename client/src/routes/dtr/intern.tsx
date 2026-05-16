@@ -163,7 +163,7 @@ function RouteComponent() {
 
                 {/* PRINT AREA */}
                 {internInputs.length > 0 && (
-                    <div className="hidden print:block px-10">
+                    <div className="print-area hidden print:block px-10">
                         <PreviewInternDtr internInputs={firstHalf} />
                         <div className="page-break" />
                         <PreviewInternDtr internInputs={secondHalf} />
