@@ -1,12 +1,10 @@
-import EmployeeForm from "@/components/employee/form"
-import PreviewEmployeeDtr from "@/components/employee/preview"
 import InternForm from "@/components/intern/form"
 import PreviewInternDtr from "@/components/intern/preview"
-import type {EmployeeRow, TemplateType} from "@/types/template-type"
+import type {InternRow, TemplateType} from "@/types/template-type"
 import {createFileRoute, useNavigate} from "@tanstack/react-router"
 import {useEffect, useMemo, useState} from "react"
 
-export const Route = createFileRoute("/dtr/employee")({
+export const Route = createFileRoute("/_layout/_private/dtr/intern")({
     component: RouteComponent,
 })
 
@@ -26,14 +24,14 @@ function RouteComponent() {
         },
     ])
 
-    const [selectedTemplate] = useState<TemplateType>(templates[1])
+    const [selectedTemplate] = useState<TemplateType>(templates[0])
 
     // 👉 SOURCE OF TRUTH
     const [startingMonth, setStartingMonth] = useState<string>(
         new Date().toISOString().slice(0, 7),
     )
 
-    const [employeeInputs, setEmployeeInputs] = useState<EmployeeRow[]>([])
+    const [internInputs, setInternInputs] = useState<InternRow[]>([])
 
     // -----------------------------
     // DERIVED: total days in month
@@ -46,6 +44,10 @@ function RouteComponent() {
     // -----------------------------
     // DERIVED: day numbers (1–31)
     // -----------------------------
+    const ranges = useMemo(
+        () => Array.from({length: totalDays}, (_, i) => i + 1),
+        [totalDays],
+    )
 
     // -----------------------------
     // INIT / RESET INPUTS PER MONTH
@@ -53,7 +55,7 @@ function RouteComponent() {
     useEffect(() => {
         const baseDate = new Date(startingMonth + "-01")
 
-        const newInputs: EmployeeRow[] = Array.from(
+        const newInputs: InternRow[] = Array.from(
             {length: totalDays},
             (_, index) => {
                 const currentDate = new Date(baseDate)
@@ -61,24 +63,23 @@ function RouteComponent() {
 
                 return {
                     date: currentDate.toISOString().split("T")[0],
-                    regularTimeIn: "",
-                    regularTimeOut: "",
-                    overtimeIn: "",
-                    overtimeOut: "",
-                    signature: "",
+                    timeIn: "",
+                    timeOut: "",
+                    hoursRendered: "",
+                    supervisorInitial: "",
                 }
             },
         )
 
-        setEmployeeInputs(newInputs)
+        setInternInputs(newInputs)
     }, [startingMonth, totalDays])
 
     // -----------------------------
     // SPLIT FOR PRINTING
     // -----------------------------
-    const mid = Math.ceil(employeeInputs.length / 2)
-    const firstHalf = employeeInputs.slice(0, mid)
-    const secondHalf = employeeInputs.slice(mid)
+    const mid = Math.ceil(internInputs.length / 2)
+    const firstHalf = internInputs.slice(0, mid)
+    const secondHalf = internInputs.slice(mid)
 
     return (
         <div className="min-h-screen bg-muted/40">
@@ -127,11 +128,11 @@ function RouteComponent() {
                     </div>
 
                     {/* FORM */}
-                    {employeeInputs.length > 0 && (
+                    {internInputs.length > 0 && (
                         <div className="mt-8">
-                            <EmployeeForm
-                                employeeInputs={employeeInputs}
-                                setEmployeeInputs={setEmployeeInputs}
+                            <InternForm
+                                internInputs={internInputs}
+                                setInternInputs={setInternInputs}
                             />
                         </div>
                     )}
@@ -153,21 +154,19 @@ function RouteComponent() {
                         </div>
 
                         <div className="p-6 max-h-[85vh] overflow-auto">
-                            {employeeInputs.length > 0 && (
-                                <PreviewEmployeeDtr
-                                    employeeInputs={employeeInputs}
-                                />
+                            {internInputs.length > 0 && (
+                                <PreviewInternDtr internInputs={internInputs} />
                             )}
                         </div>
                     </div>
                 </section>
 
                 {/* PRINT AREA */}
-                {employeeInputs.length > 0 && (
+                {internInputs.length > 0 && (
                     <div className="print-area hidden print:block px-10">
-                        <PreviewEmployeeDtr employeeInputs={firstHalf} />
+                        <PreviewInternDtr internInputs={firstHalf} />
                         <div className="page-break" />
-                        <PreviewEmployeeDtr employeeInputs={secondHalf} />
+                        <PreviewInternDtr internInputs={secondHalf} />
                     </div>
                 )}
             </main>

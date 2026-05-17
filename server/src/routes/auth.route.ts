@@ -2,11 +2,13 @@ import express from "express"
 import passport from "passport"
 import asyncHandler from "express-async-handler"
 import {
+    getLoggedUserAsync,
     loginAsync,
     loginGoogleAsync,
     logoutAsync,
     registerAsync,
 } from "../controllers/auth.controller.js"
+import {requireAuth} from "../middlewares/authenticated.middleware.js"
 const router = express.Router()
 
 router.post(
@@ -19,7 +21,6 @@ router.post(
 router.post("/register", asyncHandler(registerAsync))
 router.delete("/logout", asyncHandler(logoutAsync))
 
-// redirect to google
 router.get(
     "/google",
     passport.authenticate("google", {
@@ -27,8 +28,6 @@ router.get(
         session: false,
     }),
 )
-
-// callback
 router.get(
     "/google/callback",
     passport.authenticate("google", {
@@ -37,5 +36,6 @@ router.get(
     }),
     asyncHandler(loginGoogleAsync),
 )
+router.get("/me", asyncHandler(requireAuth), asyncHandler(getLoggedUserAsync))
 
 export default router

@@ -95,3 +95,8 @@ export const loginGoogleAsync = async (req: Request, res: Response) => {
         message: "User logged in successfully",
     })
 }
+
+export const getLoggedUserAsync = async (req: Request, res: Response) => {
+    const user = req.user as User
+    res.status(200).json({user, success: true, message: "Logged user details"})
+}
