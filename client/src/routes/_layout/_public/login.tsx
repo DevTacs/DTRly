@@ -1,9 +1,98 @@
-import {createFileRoute} from "@tanstack/react-router"
+import {createFileRoute, Link} from "@tanstack/react-router"
+import {useState} from "react"
 
 export const Route = createFileRoute("/_layout/_public/login")({
-    component: RouteComponent,
+    component: LoginPage,
 })
 
-function RouteComponent() {
-    return <div>Hello "/_layout/_public/login"!</div>
+function LoginPage() {
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+
+    const handleLogin = (e: React.FormEvent) => {
+        e.preventDefault()
+        console.log({username, password})
+    }
+
+    const handleGoogleLogin = () => {
+        window.location.href = "http://localhost:3000/api/auth/google"
+    }
+
+    return (
+        <div className="w-full max-w-md">
+            <div className="border bg-card shadow-sm rounded-2xl p-8">
+                {/* Header */}
+                <div className="mb-6 text-center">
+                    <h1 className="text-2xl font-bold tracking-tight">
+                        Welcome back
+                    </h1>
+                    <p className="text-sm text-muted-foreground mt-1">
+                        Start using
+                        <span className="font-bold pl-1">
+                            DTR.
+                            <span className="text-sidebar-primary">ly</span>
+                        </span>
+                    </p>
+                </div>
+
+                {/* Form */}
+                <form onSubmit={handleLogin} className="space-y-4">
+                    <div>
+                        <label className="text-sm font-medium">Username</label>
+                        <input
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Enter username"
+                            className="mt-1 w-full rounded-lg border px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/30"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="text-sm font-medium">Password</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Enter password"
+                            className="mt-1 w-full rounded-lg border px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/30"
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full bg-primary text-white py-2 rounded-lg text-sm font-medium hover:opacity-90 transition">
+                        Login
+                    </button>
+                </form>
+
+                {/* Divider */}
+                <div className="my-6 flex items-center gap-3">
+                    <div className="h-px flex-1 bg-border" />
+                    <span className="text-xs text-muted-foreground">OR</span>
+                    <div className="h-px flex-1 bg-border" />
+                </div>
+
+                {/* Google */}
+                <button
+                    onClick={handleGoogleLogin}
+                    className="w-full flex items-center justify-center gap-2 border rounded-lg py-2 text-sm hover:bg-muted transition">
+                    <img
+                        src="https://www.svgrepo.com/show/475656/google-color.svg"
+                        className="h-5 w-5"
+                    />
+                    Continue with Google
+                </button>
+
+                {/* Footer */}
+                <p className="text-center text-xs text-muted-foreground mt-6">
+                    Don’t have an account?{" "}
+                    <Link
+                        to="/register"
+                        className="text-primary hover:underline">
+                        Sign up
+                    </Link>
+                </p>
+            </div>
+        </div>
+    )
 }

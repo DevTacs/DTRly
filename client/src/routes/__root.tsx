@@ -36,9 +36,7 @@ function RootComponent() {
                     </nav>
                 </div>
             </header>
-            <div className="px-10">
-                <Outlet />
-            </div>
+            <Outlet />
         </React.Fragment>
     )
 }
