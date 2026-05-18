@@ -1,11 +1,10 @@
 import {createRouter} from "@tanstack/react-router"
-import {routeTree} from "../routeTree.gen"
 import type {User} from "@/types/auth.type"
+import {routeTree} from "@/routeTree.gen"
 
 export type RouterContext = {
     auth: {
         user: User | null
-        isLoading: boolean
     }
 }
 

@@ -26,9 +26,8 @@ function RegisterPage() {
         console.log(form)
     }
 
-    const handleGoogleSignup = () => {
-        window.location.href = "http://localhost:3000/api/auth/google"
-    }
+    const handleGoogleSignup = () =>
+        (window.location.href = import.meta.env.VITE_GOOGLE_AUTH)
 
     return (
         <div className="w-full max-w-md">

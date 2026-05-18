@@ -1,22 +1,46 @@
 import {createFileRoute, Link} from "@tanstack/react-router"
-import {useState} from "react"
+import {useForm} from "react-hook-form"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {loginSchema, type LoginSchemaInfer} from "@/routes/schemas/auth.schema"
+import {useMutation} from "@tanstack/react-query"
+import {loginAsync} from "@/services/auth.service"
+import {queryClient} from "@/configs/query.config"
 
 export const Route = createFileRoute("/_layout/_public/login")({
     component: LoginPage,
 })
 
 function LoginPage() {
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
+    const {mutateAsync} = useMutation({
+        mutationKey: ["login"],
+        mutationFn: loginAsync,
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ["loggedUser"]})
+        },
+    })
+    const {
+        register,
+        handleSubmit,
+        formState: {errors},
+    } = useForm<LoginSchemaInfer>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        },
+    })
 
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault()
-        console.log({username, password})
+    const handleLogin = async (data: LoginSchemaInfer) => {
+        try {
+            await mutateAsync(data)
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
     }
 
-    const handleGoogleLogin = () => {
-        window.location.href = "http://localhost:3000/api/auth/google"
-    }
+    const handleGoogleLogin = () =>
+        (window.location.href = import.meta.env.VITE_GOOGLE_AUTH)
 
     return (
         <div className="w-full max-w-md">
@@ -36,26 +60,37 @@ function LoginPage() {
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form
+                    onSubmit={handleSubmit(handleLogin)}
+                    className="space-y-4">
                     <div>
                         <label className="text-sm font-medium">Username</label>
                         <input
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            placeholder="Enter username"
+                            type="email"
                             className="mt-1 w-full rounded-lg border px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/30"
+                            placeholder="Enter email"
+                            {...register("email")}
                         />
+                        {errors.email && (
+                            <p className="mt-1 text-xs text-red-500">
+                                {errors.email.message}
+                            </p>
+                        )}
                     </div>
 
                     <div>
                         <label className="text-sm font-medium">Password</label>
                         <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Enter password"
                             className="mt-1 w-full rounded-lg border px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/30"
+                            type="password"
+                            placeholder="Enter password"
+                            {...register("password")}
                         />
+                        {errors.password && (
+                            <p className="mt-1 text-xs text-red-500">
+                                {errors.password.message}
+                            </p>
+                        )}
                     </div>
 
                     <button

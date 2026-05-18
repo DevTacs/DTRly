@@ -5,9 +5,8 @@ export const Route = createFileRoute("/_layout/_public")({
     component: RouteComponent,
     beforeLoad: ({context, location}) => {
         const typedContext = context as RouterContext
-        const {user, isLoading} = typedContext.auth
+        const {user} = typedContext.auth
 
-        if (isLoading) return
         if (user) {
             throw redirect({
                 to: "/dtr/intern",

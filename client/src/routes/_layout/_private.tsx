@@ -4,9 +4,8 @@ import {createFileRoute, Outlet, redirect} from "@tanstack/react-router"
 export const Route = createFileRoute("/_layout/_private")({
     beforeLoad: ({context, location}) => {
         const typedContext = context as RouterContext
-        const {user, isLoading} = typedContext.auth
-
-        if (isLoading) return
+        const {user} = typedContext.auth
+        console.log(user)
         if (!user) {
             throw redirect({
                 to: "/login",

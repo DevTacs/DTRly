@@ -7,9 +7,12 @@ export default function App({router}: {router: Router}) {
     const {data: user, isLoading} = useQuery({
         queryKey: ["loggedUser"],
         queryFn: getLoggedUserAsync,
+        retry: false,
+        staleTime: 1000 * 60 * 10, // 10 minutes (important)
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
     })
 
-    console.log(user)
     if (isLoading) return <div>Loading...</div>
     return (
         <RouterProvider
@@ -17,7 +20,6 @@ export default function App({router}: {router: Router}) {
             context={{
                 auth: {
                     user: user,
-                    isLoading,
                 },
             }}
         />
