@@ -9,12 +9,14 @@ export default function App({router}: {router: Router}) {
         queryFn: getLoggedUserAsync,
     })
 
+    console.log(user)
+    if (isLoading) return <div>Loading...</div>
     return (
         <RouterProvider
             router={router}
             context={{
                 auth: {
-                    user: user ?? null,
+                    user: user,
                     isLoading,
                 },
             }}

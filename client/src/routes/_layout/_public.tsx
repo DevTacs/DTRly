@@ -1,7 +1,22 @@
-import {createFileRoute, Outlet} from "@tanstack/react-router"
+import type {RouterContext} from "@/configs/router.config"
+import {createFileRoute, Outlet, redirect} from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_layout/_public")({
     component: RouteComponent,
+    beforeLoad: ({context, location}) => {
+        const typedContext = context as RouterContext
+        const {user, isLoading} = typedContext.auth
+
+        if (isLoading) return
+        if (user) {
+            throw redirect({
+                to: "/dtr/intern",
+                search: {
+                    redirect: location.href,
+                },
+            })
+        }
+    },
 })
 
 function RouteComponent() {
