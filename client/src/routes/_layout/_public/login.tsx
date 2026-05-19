@@ -1,4 +1,4 @@
-import {createFileRoute, Link} from "@tanstack/react-router"
+import {createFileRoute, Link, useNavigate} from "@tanstack/react-router"
 import {useForm} from "react-hook-form"
 import {zodResolver} from "@hookform/resolvers/zod"
 import {loginSchema, type LoginSchemaInfer} from "@/routes/schemas/auth.schema"
@@ -11,11 +11,14 @@ export const Route = createFileRoute("/_layout/_public/login")({
 })
 
 function LoginPage() {
+    const navigate = useNavigate()
     const {mutateAsync} = useMutation({
         mutationKey: ["login"],
         mutationFn: loginAsync,
         onSuccess: () => {
+            queryClient.refetchQueries({queryKey: ["loggedUser"]})
             queryClient.invalidateQueries({queryKey: ["loggedUser"]})
+            navigate({to: "/dtr/intern"})
         },
     })
     const {

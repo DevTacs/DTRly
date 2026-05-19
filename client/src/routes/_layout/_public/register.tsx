@@ -6,7 +6,7 @@ import {
 import {registerAsync} from "@/services/auth.service"
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useMutation} from "@tanstack/react-query"
-import {createFileRoute, Link} from "@tanstack/react-router"
+import {createFileRoute, Link, useNavigate} from "@tanstack/react-router"
 import {useForm} from "react-hook-form"
 
 export const Route = createFileRoute("/_layout/_public/register")({
@@ -14,6 +14,7 @@ export const Route = createFileRoute("/_layout/_public/register")({
 })
 
 function RegisterPage() {
+    const navigate = useNavigate()
     const {
         register,
         handleSubmit,
@@ -33,7 +34,8 @@ function RegisterPage() {
         mutationKey: ["register"],
         mutationFn: registerAsync,
         onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: ["loggedUser"]})
+            queryClient.refetchQueries({queryKey: ["loggedUser"]})
+            navigate({to: "/dtr/intern"})
         },
     })
 

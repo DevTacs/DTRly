@@ -12,7 +12,6 @@ export default function App({router}: {router: Router}) {
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
     })
-
     if (isLoading) return <div>Loading...</div>
     return (
         <RouterProvider

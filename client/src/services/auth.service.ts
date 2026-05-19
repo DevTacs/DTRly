@@ -65,6 +65,18 @@ export const registerAsync = async ({
             email,
             password,
         })
+        return {success, message}
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export const logoutAsync = async (): Promise<ApiResponseWithoutData> => {
+    try {
+        const {
+            data: {success, message},
+        } = await api.delete("/api/auth/logout")
         console.log(message)
         return {success, message}
     } catch (error) {

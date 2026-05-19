@@ -82,6 +82,7 @@ export const registerAsync = async (
 }
 
 export const logoutAsync = async (req: Request, res: Response) => {
+    res.clearCookie("authToken")
     res.status(200).json({message: "success"})
 }
 

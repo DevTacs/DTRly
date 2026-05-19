@@ -11,6 +11,7 @@ import {
 import {requireAuth} from "../middlewares/authenticated.middleware.js"
 const router = express.Router()
 
+router.get("/me", asyncHandler(requireAuth), asyncHandler(getLoggedUserAsync))
 router.post(
     "/login",
     passport.authenticate("local", {
@@ -19,7 +20,7 @@ router.post(
     asyncHandler(loginAsync),
 )
 router.post("/register", asyncHandler(registerAsync))
-router.delete("/logout", asyncHandler(logoutAsync))
+router.delete("/logout", asyncHandler(requireAuth), asyncHandler(logoutAsync))
 
 router.get(
     "/google",
@@ -36,6 +37,5 @@ router.get(
     }),
     asyncHandler(loginGoogleAsync),
 )
-router.get("/me", asyncHandler(requireAuth), asyncHandler(getLoggedUserAsync))
 
 export default router
