@@ -1,11 +1,28 @@
 import * as React from "react"
-import {Outlet, createRootRoute} from "@tanstack/react-router"
+import {Outlet, createRootRoute, useNavigate} from "@tanstack/react-router"
+import {Button} from "@/components/ui/button"
+import {useMutation} from "@tanstack/react-query"
+import {queryClient} from "@/configs/query.config"
+import {logoutAsync} from "@/services/auth.service"
 
 export const Route = createRootRoute({
     component: RootComponent,
 })
 
 function RootComponent() {
+    const navigate = useNavigate()
+
+    const {mutateAsync} = useMutation({
+        mutationKey: ["logout"],
+        mutationFn: logoutAsync,
+        onSuccess: () => {
+            queryClient.removeQueries({queryKey: ["loggedUser"]})
+            navigate({to: "/login"})
+        },
+    })
+
+    const handleLogout = async () => await mutateAsync()
+
     return (
         <React.Fragment>
             <header className="sticky top-0 z-50 h-16 border-b bg-sidebar/95 backdrop-blur border-sidebar-border text-sidebar-foreground">
@@ -33,6 +50,7 @@ function RootComponent() {
                             className="hover:text-sidebar-primary transition">
                             Export
                         </a>
+                        <Button onClick={handleLogout}>Logout</Button>
                     </nav>
                 </div>
             </header>
