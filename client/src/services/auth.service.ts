@@ -51,7 +51,7 @@ export const registerAsync = async ({
 }: {
     firstName: string
     lastName: string
-    middleName: string
+    middleName: string | null
     email: string
     password: string
 }): Promise<ApiResponseWithoutData> => {
@@ -65,6 +65,7 @@ export const registerAsync = async ({
             email,
             password,
         })
+        console.log(message)
         return {success, message}
     } catch (error) {
         console.log(error)

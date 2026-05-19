@@ -1,29 +1,44 @@
+import {queryClient} from "@/configs/query.config"
+import {
+    registerSchema,
+    type RegisterSchemaInfer,
+} from "@/routes/schemas/auth.schema"
+import {registerAsync} from "@/services/auth.service"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {useMutation} from "@tanstack/react-query"
 import {createFileRoute, Link} from "@tanstack/react-router"
-import {useState} from "react"
+import {useForm} from "react-hook-form"
 
 export const Route = createFileRoute("/_layout/_public/register")({
     component: RegisterPage,
 })
 
 function RegisterPage() {
-    const [form, setForm] = useState({
-        firstName: "",
-        middleName: "",
-        lastName: "",
-        email: "",
-        password: "",
+    const {
+        register,
+        handleSubmit,
+        formState: {errors},
+    } = useForm<RegisterSchemaInfer>({
+        resolver: zodResolver(registerSchema),
+        defaultValues: {
+            firstName: "",
+            middleName: "",
+            lastName: "",
+            email: "",
+            password: "",
+        },
     })
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }))
-    }
+    const {mutateAsync} = useMutation({
+        mutationKey: ["register"],
+        mutationFn: registerAsync,
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ["loggedUser"]})
+        },
+    })
 
-    const handleRegister = (e: React.FormEvent) => {
-        e.preventDefault()
-        console.log(form)
+    const handleRegister = async (data: RegisterSchemaInfer) => {
+        await mutateAsync(data)
     }
 
     const handleGoogleSignup = () =>
@@ -31,7 +46,7 @@ function RegisterPage() {
 
     return (
         <div className="w-full max-w-md">
-            <div className="border bg-card shadow-sm rounded-2xl p-8">
+            <div className="border bg-card shadow-sm rounded-2xl px-8 py-4">
                 {/* Header */}
                 <div className="mb-6 text-center">
                     <h1 className="text-2xl font-bold tracking-tight">
@@ -47,18 +62,25 @@ function RegisterPage() {
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleRegister} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-3">
+                <form
+                    onSubmit={handleSubmit(handleRegister)}
+                    className="space-y-2">
+                    <div className="grid grid-cols-2 gap-2">
                         <div>
                             <label className="text-sm font-medium">
                                 First name
                             </label>
                             <input
-                                name="firstName"
-                                value={form.firstName}
-                                onChange={handleChange}
+                                type="text"
+                                placeholder="Enter your firstname"
                                 className="mt-1 w-full rounded-lg border px-3 py-2 text-sm bg-background"
+                                {...register("firstName")}
                             />
+                            {errors.firstName && (
+                                <p className="mt-1 text-xs text-red-500">
+                                    {errors.firstName.message}
+                                </p>
+                            )}
                         </div>
 
                         <div>
@@ -66,44 +88,62 @@ function RegisterPage() {
                                 Middle name
                             </label>
                             <input
-                                name="middleName"
-                                value={form.middleName}
-                                onChange={handleChange}
+                                type="text"
+                                placeholder="Enter your middlename"
                                 className="mt-1 w-full rounded-lg border px-3 py-2 text-sm bg-background"
+                                {...register("middleName")}
                             />
+                            {errors.middleName && (
+                                <p className="mt-1 text-xs text-red-500">
+                                    {errors.middleName.message}
+                                </p>
+                            )}
                         </div>
                     </div>
 
                     <div>
                         <label className="text-sm font-medium">Last name</label>
                         <input
-                            name="lastName"
-                            value={form.lastName}
-                            onChange={handleChange}
+                            type="text"
+                            placeholder="Enter your lastname"
                             className="mt-1 w-full rounded-lg border px-3 py-2 text-sm bg-background"
+                            {...register("lastName")}
                         />
+                        {errors.lastName && (
+                            <p className="mt-1 text-xs text-red-500">
+                                {errors.lastName.message}
+                            </p>
+                        )}
                     </div>
 
                     <div>
                         <label className="text-sm font-medium">Email</label>
                         <input
-                            name="email"
                             type="email"
-                            value={form.email}
-                            onChange={handleChange}
+                            placeholder="Enter your email"
                             className="mt-1 w-full rounded-lg border px-3 py-2 text-sm bg-background"
+                            {...register("email")}
                         />
+                        {errors.email && (
+                            <p className="mt-1 text-xs text-red-500">
+                                {errors.email.message}
+                            </p>
+                        )}
                     </div>
 
                     <div>
                         <label className="text-sm font-medium">Password</label>
                         <input
-                            name="password"
                             type="password"
-                            value={form.password}
-                            onChange={handleChange}
+                            placeholder="Enter your password"
                             className="mt-1 w-full rounded-lg border px-3 py-2 text-sm bg-background"
+                            {...register("password")}
                         />
+                        {errors.password && (
+                            <p className="mt-1 text-xs text-red-500">
+                                {errors.password.message}
+                            </p>
+                        )}
                     </div>
 
                     <button
@@ -114,7 +154,7 @@ function RegisterPage() {
                 </form>
 
                 {/* Divider */}
-                <div className="my-6 flex items-center gap-3">
+                <div className="my-4 flex items-center gap-3">
                     <div className="h-px flex-1 bg-border" />
                     <span className="text-xs text-muted-foreground">OR</span>
                     <div className="h-px flex-1 bg-border" />

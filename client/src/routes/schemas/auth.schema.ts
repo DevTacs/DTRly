@@ -11,7 +11,6 @@ export const registerSchema = z.object({
     middleName: z
         .string()
         .trim()
-        .optional()
         .transform((v) => (v === "" ? null : v))
         .nullable(),
     email: z.email().trim().min(1, "Email is required"),

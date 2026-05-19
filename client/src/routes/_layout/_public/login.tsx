@@ -30,14 +30,8 @@ function LoginPage() {
         },
     })
 
-    const handleLogin = async (data: LoginSchemaInfer) => {
-        try {
-            await mutateAsync(data)
-        } catch (error) {
-            console.log(error)
-            throw error
-        }
-    }
+    const handleLogin = async (data: LoginSchemaInfer) =>
+        await mutateAsync(data)
 
     const handleGoogleLogin = () =>
         (window.location.href = import.meta.env.VITE_GOOGLE_AUTH)

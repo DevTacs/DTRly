@@ -5,7 +5,7 @@ export const Route = createFileRoute("/_layout/_private")({
     beforeLoad: ({context, location}) => {
         const typedContext = context as RouterContext
         const {user} = typedContext.auth
-        console.log(user)
+
         if (!user) {
             throw redirect({
                 to: "/login",
