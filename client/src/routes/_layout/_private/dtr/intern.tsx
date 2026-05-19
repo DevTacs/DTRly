@@ -10,7 +10,6 @@ export const Route = createFileRoute("/_layout/_private/dtr/intern")({
 
 function RouteComponent() {
     const navigate = useNavigate()
-
     const [templates] = useState<TemplateType[]>([
         {
             id: "intern",
@@ -23,35 +22,16 @@ function RouteComponent() {
             image: "../employee-dtr.png",
         },
     ])
-
     const [selectedTemplate] = useState<TemplateType>(templates[0])
-
-    // 👉 SOURCE OF TRUTH
     const [startingMonth, setStartingMonth] = useState<string>(
         new Date().toISOString().slice(0, 7),
     )
-
     const [internInputs, setInternInputs] = useState<InternRow[]>([])
-
-    // -----------------------------
-    // DERIVED: total days in month
-    // -----------------------------
     const totalDays = useMemo(() => {
         const date = new Date(startingMonth + "-01")
         return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
     }, [startingMonth])
 
-    // -----------------------------
-    // DERIVED: day numbers (1–31)
-    // -----------------------------
-    const ranges = useMemo(
-        () => Array.from({length: totalDays}, (_, i) => i + 1),
-        [totalDays],
-    )
-
-    // -----------------------------
-    // INIT / RESET INPUTS PER MONTH
-    // -----------------------------
     useEffect(() => {
         const baseDate = new Date(startingMonth + "-01")
 
@@ -74,9 +54,6 @@ function RouteComponent() {
         setInternInputs(newInputs)
     }, [startingMonth, totalDays])
 
-    // -----------------------------
-    // SPLIT FOR PRINTING
-    // -----------------------------
     const mid = Math.ceil(internInputs.length / 2)
     const firstHalf = internInputs.slice(0, mid)
     const secondHalf = internInputs.slice(mid)

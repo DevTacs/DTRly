@@ -23,31 +23,17 @@ function RouteComponent() {
             image: "../employee-dtr.png",
         },
     ])
-
     const [selectedTemplate] = useState<TemplateType>(templates[1])
-
-    // 👉 SOURCE OF TRUTH
     const [startingMonth, setStartingMonth] = useState<string>(
         new Date().toISOString().slice(0, 7),
     )
-
     const [employeeInputs, setEmployeeInputs] = useState<EmployeeRow[]>([])
 
-    // -----------------------------
-    // DERIVED: total days in month
-    // -----------------------------
     const totalDays = useMemo(() => {
         const date = new Date(startingMonth + "-01")
         return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
     }, [startingMonth])
 
-    // -----------------------------
-    // DERIVED: day numbers (1–31)
-    // -----------------------------
-
-    // -----------------------------
-    // INIT / RESET INPUTS PER MONTH
-    // -----------------------------
     useEffect(() => {
         const baseDate = new Date(startingMonth + "-01")
 

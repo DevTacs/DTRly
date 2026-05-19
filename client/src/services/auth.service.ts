@@ -7,12 +7,16 @@ type ApiResponse<T> = {
     message: string
 }
 
+type ApiResponseWithoutData = {
+    success: boolean
+    message: string
+}
+
 export const getLoggedUserAsync = async (): Promise<ApiResponse<User>> => {
     try {
         const {
             data: {user, success, message},
         } = await api.get("/api/auth/me")
-
         return {data: user, success, message}
     } catch (error) {
         console.log(error)
@@ -26,10 +30,12 @@ export const loginAsync = async ({
 }: {
     email: string
     password: string
-}) => {
+}): Promise<ApiResponseWithoutData> => {
     try {
-        const {data} = await api.post("/api/auth/login", {email, password})
-        console.log(data)
+        const {
+            data: {success, message},
+        } = await api.post("/api/auth/login", {email, password})
+        return {success, message}
     } catch (error) {
         console.log(error)
         throw error
@@ -45,19 +51,34 @@ export const registerAsync = async ({
 }: {
     firstName: string
     lastName: string
-    middleName: string
+    middleName: string | null
     email: string
     password: string
-}) => {
+}): Promise<ApiResponseWithoutData> => {
     try {
-        const {data} = await api.post("/api/auth/register", {
+        const {
+            data: {success, message},
+        } = await api.post("/api/auth/register", {
             firstName,
             lastName,
             middleName,
             email,
             password,
         })
-        console.log(data)
+        return {success, message}
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export const logoutAsync = async (): Promise<ApiResponseWithoutData> => {
+    try {
+        const {
+            data: {success, message},
+        } = await api.delete("/api/auth/logout")
+        console.log(message)
+        return {success, message}
     } catch (error) {
         console.log(error)
         throw error

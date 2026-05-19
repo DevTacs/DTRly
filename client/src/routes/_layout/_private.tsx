@@ -1,12 +1,13 @@
+import {queryClient} from "@/configs/query.config"
 import type {RouterContext} from "@/configs/router.config"
+import type {User} from "@/types/auth.type"
 import {createFileRoute, Outlet, redirect} from "@tanstack/react-router"
 
-export const Route = createFileRoute("/_private")({
+export const Route = createFileRoute("/_layout/_private")({
     beforeLoad: ({context, location}) => {
-        // if not logged in → block access
         const typedContext = context as RouterContext
-
-        if (!typedContext.auth.user) {
+        const {user} = typedContext.auth
+        if (!user) {
             throw redirect({
                 to: "/login",
                 search: {

@@ -8,136 +8,166 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import {Route as rootRouteImport} from "./routes/__root"
-import {Route as PublicRouteImport} from "./routes/_public"
-import {Route as PrivateRouteImport} from "./routes/_private"
-import {Route as PublicTestRouteImport} from "./routes/_layout/_public/test"
-import {Route as LayoutPrivateDtrInternRouteImport} from "./routes/_layout/_private/dtr/intern"
-import {Route as LayoutPrivateDtrEmployeeRouteImport} from "./routes/_layout/_private/dtr/employee"
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as LayoutPublicRouteImport } from './routes/_layout/_public'
+import { Route as LayoutPrivateRouteImport } from './routes/_layout/_private'
+import { Route as LayoutPublicRegisterRouteImport } from './routes/_layout/_public/register'
+import { Route as LayoutPublicLoginRouteImport } from './routes/_layout/_public/login'
+import { Route as LayoutPrivateDtrInternRouteImport } from './routes/_layout/_private/dtr/intern'
+import { Route as LayoutPrivateDtrEmployeeRouteImport } from './routes/_layout/_private/dtr/employee'
 
-const PublicRoute = PublicRouteImport.update({
-    id: "/_public",
-    getParentRoute: () => rootRouteImport,
+const LayoutPublicRoute = LayoutPublicRouteImport.update({
+  id: '/_layout/_public',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const PrivateRoute = PrivateRouteImport.update({
-    id: "/_private",
-    getParentRoute: () => rootRouteImport,
+const LayoutPrivateRoute = LayoutPrivateRouteImport.update({
+  id: '/_layout/_private',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const PublicTestRoute = PublicTestRouteImport.update({
-    id: "/_public/test",
-    path: "/test",
-    getParentRoute: () => PublicRoute,
+const LayoutPublicRegisterRoute = LayoutPublicRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => LayoutPublicRoute,
+} as any)
+const LayoutPublicLoginRoute = LayoutPublicLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => LayoutPublicRoute,
 } as any)
 const LayoutPrivateDtrInternRoute = LayoutPrivateDtrInternRouteImport.update({
-    id: "/_layout/_private/dtr/intern",
-    path: "/dtr/intern",
-    getParentRoute: () => rootRouteImport,
+  id: '/dtr/intern',
+  path: '/dtr/intern',
+  getParentRoute: () => LayoutPrivateRoute,
 } as any)
 const LayoutPrivateDtrEmployeeRoute =
-    LayoutPrivateDtrEmployeeRouteImport.update({
-        id: "/_layout/_private/dtr/employee",
-        path: "/dtr/employee",
-        getParentRoute: () => rootRouteImport,
-    } as any)
+  LayoutPrivateDtrEmployeeRouteImport.update({
+    id: '/dtr/employee',
+    path: '/dtr/employee',
+    getParentRoute: () => LayoutPrivateRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-    "/": typeof PublicRouteWithChildren
-    "/test": typeof PublicTestRoute
-    "/dtr/employee": typeof LayoutPrivateDtrEmployeeRoute
-    "/dtr/intern": typeof LayoutPrivateDtrInternRoute
+  '/': typeof LayoutPublicRouteWithChildren
+  '/login': typeof LayoutPublicLoginRoute
+  '/register': typeof LayoutPublicRegisterRoute
+  '/dtr/employee': typeof LayoutPrivateDtrEmployeeRoute
+  '/dtr/intern': typeof LayoutPrivateDtrInternRoute
 }
 export interface FileRoutesByTo {
-    "/": typeof PublicRouteWithChildren
-    "/test": typeof PublicTestRoute
-    "/dtr/employee": typeof LayoutPrivateDtrEmployeeRoute
-    "/dtr/intern": typeof LayoutPrivateDtrInternRoute
+  '/': typeof LayoutPublicRouteWithChildren
+  '/login': typeof LayoutPublicLoginRoute
+  '/register': typeof LayoutPublicRegisterRoute
+  '/dtr/employee': typeof LayoutPrivateDtrEmployeeRoute
+  '/dtr/intern': typeof LayoutPrivateDtrInternRoute
 }
 export interface FileRoutesById {
-    __root__: typeof rootRouteImport
-    "/_private": typeof PrivateRoute
-    "/_public": typeof PublicRouteWithChildren
-    "/_public/test": typeof PublicTestRoute
-    "/_layout/_private/dtr/employee": typeof LayoutPrivateDtrEmployeeRoute
-    "/_layout/_private/dtr/intern": typeof LayoutPrivateDtrInternRoute
+  __root__: typeof rootRouteImport
+  '/_layout/_private': typeof LayoutPrivateRouteWithChildren
+  '/_layout/_public': typeof LayoutPublicRouteWithChildren
+  '/_layout/_public/login': typeof LayoutPublicLoginRoute
+  '/_layout/_public/register': typeof LayoutPublicRegisterRoute
+  '/_layout/_private/dtr/employee': typeof LayoutPrivateDtrEmployeeRoute
+  '/_layout/_private/dtr/intern': typeof LayoutPrivateDtrInternRoute
 }
 export interface FileRouteTypes {
-    fileRoutesByFullPath: FileRoutesByFullPath
-    fullPaths: "/" | "/test" | "/dtr/employee" | "/dtr/intern"
-    fileRoutesByTo: FileRoutesByTo
-    to: "/" | "/test" | "/dtr/employee" | "/dtr/intern"
-    id:
-        | "__root__"
-        | "/_private"
-        | "/_public"
-        | "/_public/test"
-        | "/_layout/_private/dtr/employee"
-        | "/_layout/_private/dtr/intern"
-    fileRoutesById: FileRoutesById
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/login' | '/register' | '/dtr/employee' | '/dtr/intern'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/login' | '/register' | '/dtr/employee' | '/dtr/intern'
+  id:
+    | '__root__'
+    | '/_layout/_private'
+    | '/_layout/_public'
+    | '/_layout/_public/login'
+    | '/_layout/_public/register'
+    | '/_layout/_private/dtr/employee'
+    | '/_layout/_private/dtr/intern'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-    PrivateRoute: typeof PrivateRoute
-    PublicRoute: typeof PublicRouteWithChildren
-    LayoutPrivateDtrEmployeeRoute: typeof LayoutPrivateDtrEmployeeRoute
-    LayoutPrivateDtrInternRoute: typeof LayoutPrivateDtrInternRoute
+  LayoutPrivateRoute: typeof LayoutPrivateRouteWithChildren
+  LayoutPublicRoute: typeof LayoutPublicRouteWithChildren
 }
 
-declare module "@tanstack/react-router" {
-    interface FileRoutesByPath {
-        "/_public": {
-            id: "/_public"
-            path: ""
-            fullPath: "/"
-            preLoaderRoute: typeof PublicRouteImport
-            parentRoute: typeof rootRouteImport
-        }
-        "/_private": {
-            id: "/_private"
-            path: ""
-            fullPath: "/"
-            preLoaderRoute: typeof PrivateRouteImport
-            parentRoute: typeof rootRouteImport
-        }
-        "/_public/test": {
-            id: "/_public/test"
-            path: "/test"
-            fullPath: "/test"
-            preLoaderRoute: typeof PublicTestRouteImport
-            parentRoute: typeof PublicRoute
-        }
-        "/_layout/_private/dtr/intern": {
-            id: "/_layout/_private/dtr/intern"
-            path: "/dtr/intern"
-            fullPath: "/dtr/intern"
-            preLoaderRoute: typeof LayoutPrivateDtrInternRouteImport
-            parentRoute: typeof rootRouteImport
-        }
-        "/_layout/_private/dtr/employee": {
-            id: "/_layout/_private/dtr/employee"
-            path: "/dtr/employee"
-            fullPath: "/dtr/employee"
-            preLoaderRoute: typeof LayoutPrivateDtrEmployeeRouteImport
-            parentRoute: typeof rootRouteImport
-        }
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/_layout/_public': {
+      id: '/_layout/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutPublicRouteImport
+      parentRoute: typeof rootRouteImport
     }
+    '/_layout/_private': {
+      id: '/_layout/_private'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutPrivateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_layout/_public/register': {
+      id: '/_layout/_public/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof LayoutPublicRegisterRouteImport
+      parentRoute: typeof LayoutPublicRoute
+    }
+    '/_layout/_public/login': {
+      id: '/_layout/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LayoutPublicLoginRouteImport
+      parentRoute: typeof LayoutPublicRoute
+    }
+    '/_layout/_private/dtr/intern': {
+      id: '/_layout/_private/dtr/intern'
+      path: '/dtr/intern'
+      fullPath: '/dtr/intern'
+      preLoaderRoute: typeof LayoutPrivateDtrInternRouteImport
+      parentRoute: typeof LayoutPrivateRoute
+    }
+    '/_layout/_private/dtr/employee': {
+      id: '/_layout/_private/dtr/employee'
+      path: '/dtr/employee'
+      fullPath: '/dtr/employee'
+      preLoaderRoute: typeof LayoutPrivateDtrEmployeeRouteImport
+      parentRoute: typeof LayoutPrivateRoute
+    }
+  }
 }
 
-interface PublicRouteChildren {
-    PublicTestRoute: typeof PublicTestRoute
+interface LayoutPrivateRouteChildren {
+  LayoutPrivateDtrEmployeeRoute: typeof LayoutPrivateDtrEmployeeRoute
+  LayoutPrivateDtrInternRoute: typeof LayoutPrivateDtrInternRoute
 }
 
-const PublicRouteChildren: PublicRouteChildren = {
-    PublicTestRoute: PublicTestRoute,
+const LayoutPrivateRouteChildren: LayoutPrivateRouteChildren = {
+  LayoutPrivateDtrEmployeeRoute: LayoutPrivateDtrEmployeeRoute,
+  LayoutPrivateDtrInternRoute: LayoutPrivateDtrInternRoute,
 }
 
-const PublicRouteWithChildren =
-    PublicRoute._addFileChildren(PublicRouteChildren)
+const LayoutPrivateRouteWithChildren = LayoutPrivateRoute._addFileChildren(
+  LayoutPrivateRouteChildren,
+)
+
+interface LayoutPublicRouteChildren {
+  LayoutPublicLoginRoute: typeof LayoutPublicLoginRoute
+  LayoutPublicRegisterRoute: typeof LayoutPublicRegisterRoute
+}
+
+const LayoutPublicRouteChildren: LayoutPublicRouteChildren = {
+  LayoutPublicLoginRoute: LayoutPublicLoginRoute,
+  LayoutPublicRegisterRoute: LayoutPublicRegisterRoute,
+}
+
+const LayoutPublicRouteWithChildren = LayoutPublicRoute._addFileChildren(
+  LayoutPublicRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
-    PrivateRoute: PrivateRoute,
-    PublicRoute: PublicRouteWithChildren,
-    LayoutPrivateDtrEmployeeRoute: LayoutPrivateDtrEmployeeRoute,
-    LayoutPrivateDtrInternRoute: LayoutPrivateDtrInternRoute,
+  LayoutPrivateRoute: LayoutPrivateRouteWithChildren,
+  LayoutPublicRoute: LayoutPublicRouteWithChildren,
 }
 export const routeTree = rootRouteImport
-    ._addFileChildren(rootRouteChildren)
-    ._addFileTypes<FileRouteTypes>()
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
